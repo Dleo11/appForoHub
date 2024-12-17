@@ -1,6 +1,7 @@
 package com.mdleo.API.foroHub.controller;
 
 import com.mdleo.API.foroHub.domain.curso.*;
+import com.mdleo.API.foroHub.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,12 @@ public class CursoController {
     @PostMapping("/registrar")
     public ResponseEntity<DatosRespuestaCurso> registrarCurso(@RequestBody @Valid DatosRegistroCurso dRegistroCurso, UriComponentsBuilder uriComponentsBuilder){
         Curso curso = cursoRepository.save(new Curso(dRegistroCurso));
-        DatosRespuestaCurso datosRespuestaCurso = new DatosRespuestaCurso(curso.getId(),
+        DatosRespuestaCurso datosRespuestaCurso = new DatosRespuestaCurso(
+                curso.getId(),
                 curso.getNombre(),
                 curso.getCategoria().toString(),
-                curso.getDescripcion());
+                curso.getDescripcion()
+        );
         URI url = uriComponentsBuilder.path("cursos/{id}").buildAndExpand(curso.getId()).toUri();
         return ResponseEntity.created(url).body(datosRespuestaCurso);
     }
@@ -38,12 +41,14 @@ public class CursoController {
     }
 
     @GetMapping("/detalles/{id}")
-    public ResponseEntity retornarCurso(@PathVariable Long id) {
-        Curso curso = cursoRepository.getReferenceById(id);
-        var datosCurso = new DatosRespuestaCurso(curso.getId(),
+    public ResponseEntity<DatosRespuestaCurso> retornarCurso(@PathVariable Long id) {
+        Curso curso = cursoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Curso no encontrado"));
+        DatosRespuestaCurso datosCurso = new DatosRespuestaCurso(
+                curso.getId(),
                 curso.getNombre(),
                 curso.getCategoria().toString(),
-                curso.getDescripcion());
+                curso.getDescripcion()
+        );
         return ResponseEntity.ok(datosCurso);
     }
 }

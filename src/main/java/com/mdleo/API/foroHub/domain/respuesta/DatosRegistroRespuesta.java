@@ -12,8 +12,6 @@ public record DatosRegistroRespuesta(
         @NotBlank
         String mensaje,
         @NotNull
-        LocalDateTime fecha,
-        @NotNull
         Long topicoId,
         @NotNull
         Long usuarioId

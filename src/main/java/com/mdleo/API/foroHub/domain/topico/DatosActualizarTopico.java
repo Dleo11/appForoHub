@@ -10,16 +10,10 @@ public record DatosActualizarTopico(
         @NotNull
         Long id,
         @NotBlank
-        String mensaje,
-        @NotNull
-        LocalDateTime fecha,
-        @Valid
-        Estado status
+        String mensaje
 ) {
     public DatosActualizarTopico(Topico topico){
         this(topico.getId(),
-                topico.getMensaje(),
-                topico.getFecha(),
-                topico.getStatus());
+                topico.getMensaje());
     }
 }

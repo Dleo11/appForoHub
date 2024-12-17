@@ -1,6 +1,6 @@
 package com.mdleo.API.foroHub.infra.errores;
 
-import com.mdleo.API.foroHub.domain.ValidacionExcepcion;
+import com.mdleo.API.foroHub.exception.ValidacionExcepcion;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

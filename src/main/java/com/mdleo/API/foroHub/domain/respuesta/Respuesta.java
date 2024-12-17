@@ -4,10 +4,7 @@ import com.mdleo.API.foroHub.domain.topico.Topico;
 import com.mdleo.API.foroHub.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -29,14 +26,19 @@ public class Respuesta {
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario autor;
+    @Setter
     private Boolean solucion;
 
     // methods
     public Respuesta(@Valid DatosRegistroRespuesta datosRegistroRespuesta, Usuario autor, Topico topico){
         this.mensaje = datosRegistroRespuesta.mensaje();
-        this.fecha = datosRegistroRespuesta.fecha();
-        this.solucion = false;
+        this.fecha = LocalDateTime.now();
         this.autor = autor;
         this.topico = topico;
+        this.solucion = false;
+    }
+
+    public void solucionar() {
+        this.solucion = true;
     }
 }

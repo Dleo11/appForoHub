@@ -17,9 +17,6 @@ public interface TopicoRepository extends JpaRepository<Topico,Long> {
     @Query("SELECT t FROM Topico t ORDER BY t.curso.nombre ASC")
     Page<Topico> findByCursoAsc(Pageable pageable);
 
-
     @Query("SELECT t FROM Topico t ORDER BY t.fecha ASC")
     Page<Topico> findAllOrderByFecha(Pageable pageable);
-
-
 }

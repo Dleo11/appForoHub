@@ -14,10 +14,6 @@ public record DatosRegistroTopico(
         @NotBlank
         String mensaje,
         @NotNull
-        LocalDateTime fecha,
-        @NotNull
-        Estado status,
-        @NotNull
         Long cursoId,
         @NotNull
         Long usuarioId

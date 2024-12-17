@@ -1,7 +1,7 @@
 package com.mdleo.API.foroHub.controller;
 
-import com.mdleo.API.foroHub.domain.curso.DatosRegistroCurso;
 import com.mdleo.API.foroHub.domain.usuario.*;
+import com.mdleo.API.foroHub.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,27 +24,31 @@ public class UsuarioController {
 
     @PostMapping("/registrar")
     public ResponseEntity<DatosRespuestaUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsario dRegistroUsario, UriComponentsBuilder uriComponentsBuilder){
-        Usuario usuario= usuarioRepository.save(new Usuario(dRegistroUsario));
-        DatosRespuestaUsuario datosRespuestaUsuario= new DatosRespuestaUsuario(usuario.getId(),
+        Usuario usuario = usuarioRepository.save(new Usuario(dRegistroUsario));
+        DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(
+                usuario.getId(),
                 usuario.getNombre(),
                 usuario.getEmail(),
-                usuario.getPerfil().toString());
+                usuario.getPerfil().toString()
+        );
         URI url = uriComponentsBuilder.path("usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
         return ResponseEntity.created(url).body(datosRespuestaUsuario);
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuarios(@PageableDefault(size = 5)Pageable pageable) {
+    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuarios(@PageableDefault(size = 5) Pageable pageable) {
         return ResponseEntity.ok(usuarioRepository.findAll(pageable).map(DatosListadoUsuario::new));
     }
 
     @GetMapping("/detalles/{id}")
-    public ResponseEntity retornarUsuarios(@PathVariable Long id) {
-        Usuario usuario = usuarioRepository.getReferenceById(id);
-        var datosUsuario = new DatosRespuestaUsuario(usuario.getId(),
+    public ResponseEntity<DatosRespuestaUsuario> retornarUsuarios(@PathVariable Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        DatosRespuestaUsuario datosUsuario = new DatosRespuestaUsuario(
+                usuario.getId(),
                 usuario.getNombre(),
                 usuario.getEmail(),
-                usuario.getPerfil().toString());
+                usuario.getPerfil().toString()
+        );
         return ResponseEntity.ok(datosUsuario);
     }
 }

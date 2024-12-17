@@ -4,10 +4,7 @@ import com.mdleo.API.foroHub.domain.curso.Curso;
 import com.mdleo.API.foroHub.domain.respuesta.Respuesta;
 import com.mdleo.API.foroHub.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +22,9 @@ public class Topico {
     private Long id;
     private String titulo;
     private String mensaje;
+    @Setter
     private LocalDateTime fecha;
+    @Setter
     @Enumerated(EnumType.STRING)
     private Estado status;
     private Boolean activo;
@@ -45,8 +44,8 @@ public class Topico {
     public Topico(DatosRegistroTopico datosRegistroTopico, Usuario autor, Curso curso){
         this.titulo = datosRegistroTopico.titulo();
         this.mensaje = datosRegistroTopico.mensaje();
-        this.fecha = datosRegistroTopico.fecha();
-        this.status = datosRegistroTopico.status();
+        this.fecha = LocalDateTime.now();
+        this.status = Estado.NO_SOLUCIONADO;
         this.activo = true;
         this.autor = autor;
         this.curso = curso;
@@ -60,12 +59,6 @@ public class Topico {
         if (dActualizarTopico.mensaje() != null){
             this.mensaje = dActualizarTopico.mensaje();
         }
-        if (dActualizarTopico.fecha() != null) {
-            this.fecha = dActualizarTopico.fecha();
-        }
-        if (dActualizarTopico.status() != null) {
-            this.status = dActualizarTopico.status();
-        }
+        this.fecha = LocalDateTime.now();
     }
-
 }

@@ -12,9 +12,9 @@ public record DatosRespuestaTopico(
         String curso,
         String autor,
         LocalDateTime fecha,
+        Estado status,
         String mensaje,
-        List<DatosRespuestasTopico> respuestas,
-        Estado status
+        List<DatosRespuestasTopico> respuestas
 ) {
     public DatosRespuestaTopico(Topico topico) {
         this(topico.getId(),
@@ -22,9 +22,9 @@ public record DatosRespuestaTopico(
                 topico.getCurso().getNombre(),
                 topico.getAutor().getNombre(),
                 topico.getFecha(),
+                topico.getStatus(),
                 topico.getMensaje(),
-                topico.getRespuestas().stream().map(DatosRespuestasTopico::new).collect(Collectors.toList()),
-                Estado.valueOf(topico.getStatus().toString())
+                topico.getRespuestas().stream().map(DatosRespuestasTopico::new).collect(Collectors.toList())
         );
     }
 }

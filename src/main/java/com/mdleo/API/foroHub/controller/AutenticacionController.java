@@ -22,26 +22,19 @@ public class AutenticacionController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity autenticarUser(@RequestBody @Valid DatosAutenticacionUser dAutenticacionUser) {
+    public ResponseEntity<DatosJWTtoken> autenticarUser(@RequestBody @Valid DatosAutenticacionUser dAutenticacionUser) {
         try {
-            System.out.println(dAutenticacionUser.email());
-            System.out.println(dAutenticacionUser.clave());
             Authentication authToken = new UsernamePasswordAuthenticationToken(dAutenticacionUser.email(), dAutenticacionUser.clave());
-            System.out.println(authToken);
-            var userAutenticado = authenticationManager.authenticate(authToken);
-            System.out.println(userAutenticado);
-
-            var JWTtoken = tokenService.makeToken((Usuario) userAutenticado.getPrincipal());
+            Authentication userAutenticado = authenticationManager.authenticate(authToken);
+            String JWTtoken = tokenService.makeToken((Usuario) userAutenticado.getPrincipal());
             return ResponseEntity.ok(new DatosJWTtoken(JWTtoken));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(401).body("Credenciales incorrectas");
+            return ResponseEntity.status(401).body(new DatosJWTtoken("Credenciales incorrectas"));
         }
     }
-
 }
-
-
